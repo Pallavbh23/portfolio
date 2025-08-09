@@ -96,12 +96,66 @@
   }
 }
 
-@layer utilities {
-  .container-app { @apply mx-auto max-w-6xl px-4 sm:px-6 lg:px-8; }
-  .stack-sm > * + * { @apply mt-3; }
-  .stack-md > * + * { @apply mt-6; }
-  .stack-lg > * + * { @apply mt-10; }
+html { scroll-behavior: smooth; }
+
+/* NEW: prevent horizontal scroll globally */
+body { overflow-x: hidden; }
+
+@media (max-width: 640px) {
+  h1 { font-size: clamp(2.1rem, 7vw, 2.75rem); }
+  h2 { font-size: clamp(1.65rem, 5.6vw, 2.25rem); }
+  h3 { font-size: clamp(1.3rem, 4.6vw, 1.8rem); }
 }
+@media (min-width: 1280px) {
+  h1 { font-size: clamp(3.5rem, 3.8vw, 4.5rem); }
+}
+
+@layer utilities {
+  /* REPLACED: .container-app using raw CSS instead of @apply to avoid build error */
+  .container-app { margin-left:auto; margin-right:auto; max-width:72rem; padding-left:1rem; padding-right:1rem; }
+  @media (min-width:640px){ .container-app { padding-left:1.5rem; padding-right:1.5rem; } }
+  @media (min-width:1024px){ .container-app { padding-left:2rem; padding-right:2rem; } }
+  /* small ultra-narrow tweak */
+  @media (max-width: 400px) { .container-app { padding-left: 0.75rem; padding-right: 0.75rem; } }
+  @media (max-width: 340px) { .container-app { padding-left: 0.55rem; padding-right: 0.55rem; } }
+  /* Rewritten custom utilities without @apply for better compatibility */
+  .gradient-text { background-image: linear-gradient(90deg,hsl(var(--primary)) 0%,hsl(var(--primary)/0.55) 45%,hsl(var(--primary)) 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .glass { background-color: hsl(var(--background)/0.6); backdrop-filter: blur(12px); border: 1px solid hsl(var(--border)/0.6); box-shadow: 0 2px 4px -1px hsl(var(--foreground)/0.08),0 4px 12px -2px hsl(var(--foreground)/0.06); }
+  .dark .glass { background-color: hsl(var(--background)/0.4); border-color: hsl(var(--border)/0.35); }
+  .focus-ring { outline: none; box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 4px hsl(var(--ring)/0.7); }
+  .no-tap-highlight { -webkit-tap-highlight-color: transparent; }
+  .card-hover { transition: box-shadow 220ms, transform 220ms; }
+  .card-hover:hover { box-shadow: 0 6px 22px -4px hsl(var(--primary)/0.18), 0 2px 8px -2px hsl(var(--foreground)/0.08); }
+  .prose-muted p { color: hsl(var(--muted-foreground)); }
+  .section-flash { position: relative; }
+  .section-flash::after { content: ""; position: absolute; inset: 0; border: 1px solid hsl(var(--primary)); border-radius: 0.75rem; pointer-events: none; animation: sectionFlash 3s ease-out forwards; }
+  @keyframes sectionFlash { 0% { opacity: 1; box-shadow: 0 0 0 0 hsl(var(--primary)); } 40% { box-shadow: 0 0 0 4px hsl(var(--primary)/0.35); } 100% { opacity: 0; box-shadow: 0 0 0 0 hsl(var(--primary)/0); } }
+}
+
+/* Section spacing tweak for very small screens */
+@media (max-width: 480px) {
+  section { padding-top: 2.4rem !important; padding-bottom: 2.4rem !important; }
+  /* Reduce gap between headings and following content more */
+  h1 + *, h2 + *, h3 + * { margin-top: 0.65rem !important; }
+}
+
+/* Remove any unintended heading left margins on tiny screens */
+@media (max-width: 480px) {
+  h1, h2, h3, h4 { margin-left: 0 !important; }
+}
+
+/* Media: ensure responsive scaling & no overflow */
+img, svg, video, canvas, iframe { max-width: 100%; height: auto; }
+
+/* Prevent long words / code from forcing horizontal scroll */
+* { word-wrap: break-word; overflow-wrap: anywhere; }
+pre, code { white-space: pre-wrap; word-break: break-word; }
+
+/* Ensure layout containers do not exceed viewport */
+body, #__next, main, section, .container-app { max-width: 100vw; }
+
+/* Allow vertical growth instead of horizontal overflow for flex/grid */
+.flex, .grid { min-width: 0; }
 
 /* tasteful personality: barely-there grid + soft radial glow */
 body::before {
@@ -118,7 +172,17 @@ body::before {
   z-index: 0;
 }
 
+/* Smooth color + bg transitions */
+* { transition: background-color 150ms linear, color 120ms linear, border-color 150ms linear; }
+
+/* Improve scrollbars (webkit) */
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: hsl(var(--background)); }
+::-webkit-scrollbar-thumb { background: hsl(var(--muted)); border-radius: 20px; border: 2px solid hsl(var(--background)); }
+::-webkit-scrollbar-thumb:hover { background: hsl(var(--muted-foreground)/0.4); }
+
 /* tighter default margins below headings for consistency */
 @layer base {
-  h1 + *, h2 + *, h3 + * { @apply mt-4; }
+  /* replaced @apply for compatibility */
+  h1 + *, h2 + *, h3 + * { margin-top: 1rem; }
 }

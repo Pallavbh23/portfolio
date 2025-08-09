@@ -1,19 +1,26 @@
+// components/ui/Card.tsx
 import { cn } from "@/lib/cn";
 
 export function Card({ className, children }: React.ComponentProps<"div">) {
+  if (process.env.NODE_ENV !== "production") {
+    // eslint-disable-next-line no-console
+    console.debug("[Card] render");
+  }
   return (
-    <div className={cn(
-      "rounded-2xl border border-border bg-card text-card-foreground shadow-sm",
-      "transition-transform will-change-transform hover:scale-[1.01]",
-      className
-    )}>
+    <div
+      className={cn(
+        "rounded-2xl border border-border bg-card text-card-foreground shadow-sm",
+        "transition-transform will-change-transform hover:scale-[1.01]",
+        className
+      )}
+    >
       {children}
     </div>
   );
 }
 
 export function CardBody({ className, children }: React.ComponentProps<"div">) {
-  return <div className={cn("p-6 md:p-8 stack-sm", className)}>{children}</div>;
+  return <div className={cn("p-6 md:p-8 space-y-3", className)}>{children}</div>;
 }
 
 export function CardTitle({ className, children }: React.ComponentProps<"h3">) {
