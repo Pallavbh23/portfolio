@@ -7,3 +7,12 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 dist
+.DS_store
+.vscode
+.idea
+*.swp
+*.swo
+*.tar.gz
+*.zip
+*.tgz
+*.log
