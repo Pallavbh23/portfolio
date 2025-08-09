@@ -17,20 +17,23 @@ interface GraphEdge { from: string; to: string; }
 // Normalized layout (roughly similar to previous positioning, flattened vertically)
 const NODE_DATA: GraphNode[] = [
   { id: 'Start', nx: 0.05, ny: 0.50, variant: 'primary' },
-  { id: 'About', nx: 0.22, ny: 0.26, href: '#about', variant: 'accent' },
-  { id: 'Work', nx: 0.37, ny: 0.50, href: '#work', variant: 'neutral' },
-  { id: 'Projects', nx: 0.52, ny: 0.26, href: '#projects', variant: 'accent' },
-  { id: 'Writing', nx: 0.52, ny: 0.72, href: '#writing', variant: 'alt' },
-  { id: 'Playground', nx: 0.68, ny: 0.50, href: '#playground', variant: 'accent' },
-  { id: 'Contact', nx: 0.86, ny: 0.50, href: '#contact', variant: 'neutral' },
+  { id: 'About', nx: 0.20, ny: 0.28, href: '#about', variant: 'accent' },
+  { id: 'Work', nx: 0.34, ny: 0.50, href: '#work', variant: 'neutral' },
+  { id: 'Projects', nx: 0.50, ny: 0.20, href: '#projects', variant: 'accent' },
+  { id: 'Coding Stats', nx: 0.58, ny: 0.50, href: '#coding-stats', variant: 'alt' },
+  { id: 'Writing', nx: 0.50, ny: 0.80, href: '#writing', variant: 'alt' },
+  { id: 'Playground', nx: 0.79, ny: 0.50, href: '#playground', variant: 'accent' },
+  { id: 'Contact', nx: 0.985, ny: 0.50, href: '#contact', variant: 'neutral' },
 ];
 
 const EDGE_DATA: GraphEdge[] = [
   { from: 'Start', to: 'About' },
   { from: 'About', to: 'Work' },
   { from: 'Work', to: 'Projects' },
+  { from: 'Work', to: 'Coding Stats' },
   { from: 'Work', to: 'Writing' },
   { from: 'Projects', to: 'Playground' },
+  { from: 'Coding Stats', to: 'Playground' },
   { from: 'Writing', to: 'Playground' },
   { from: 'Playground', to: 'Contact' },
 ];
@@ -80,8 +83,15 @@ function variantText(_v?: GraphNode['variant'], active?: boolean) {
 // Utility to shorten edge so arrowhead doesn't overlap node shape
 function shorten(x1:number,y1:number,x2:number,y2:number, delta:number){
   const dx = x2 - x1; const dy = y2 - y1; const len = Math.hypot(dx,dy) || 1;
+  // Initial cap so we never invert
+  let d = Math.max(0, Math.min(delta, (len / 2) - 2));
+  // Ensure a minimum remaining visible shaft so arrow direction is visually clear (fixes Playground→Contact)
+  const MIN_REMAIN = 40; // px in viewBox units
+  if (len - 2*d < MIN_REMAIN) {
+    d = Math.max(0, (len - MIN_REMAIN) / 2);
+  }
   const ux = dx/len; const uy = dy/len;
-  return { sx: x1 + ux*delta, sy: y1 + uy*delta, ex: x2 - ux*delta, ey: y2 - uy*delta };
+  return { sx: x1 + ux*d, sy: y1 + uy*d, ex: x2 - ux*d, ey: y2 - uy*d };
 }
 
 export default function GraphHero() {
@@ -302,7 +312,6 @@ export default function GraphHero() {
             {NODE_DATA.map(node => {
               const label = node.label || node.id;
               const inPath = pathSet.has(node.id);
-              const isEnd = hoverId === node.id;
               // dynamic geometry
               const charUnit = 8.8;
               const paddingX = 44;
@@ -313,15 +322,16 @@ export default function GraphHero() {
               const y = node.ny * VB_HEIGHT;
               const path = [
                 `M ${x} ${y - H / 2}`,
-                `${x + W / 2} ${y - innerBand}`,
-                `${x + W / 2} ${y + innerBand}`,
-                `${x} ${y + H / 2}`,
-                `${x - W / 2} ${y + innerBand}`,
-                `${x - W / 2} ${y - innerBand}`,
+                `L ${x + W / 2} ${y - innerBand}`,
+                `L ${x + W / 2} ${y + innerBand}`,
+                `L ${x} ${y + H / 2}`,
+                `L ${x - W / 2} ${y + innerBand}`,
+                `L ${x - W / 2} ${y - innerBand}`,
                 'Z',
               ].join(' ');
 
               const fillStyle = inPath ? 'hsl(var(--primary))' : 'hsl(var(--card))';
+              const strokeCol = inPath ? 'hsl(var(--primary)/0.9)' : 'hsl(var(--border))';
               const textColor = inPath ? 'hsl(var(--primary-foreground))' : 'hsl(var(--foreground))';
 
               return (
@@ -337,14 +347,14 @@ export default function GraphHero() {
                   onFocus={() => setFocusId(node.id)}
                   onKeyDown={e => onNodeKeyDown(e, node)}
                   onMouseDown={(e) => { e.preventDefault(); }}
-                  onClick={(e) => node.href && (smoothScrollTo(node.href), flashSection(node.href))}
+                  onClick={() => node.href && (smoothScrollTo(node.href), flashSection(node.href))}
                   style={{ cursor: node.href ? 'pointer' : 'default', outline: 'none', WebkitTapHighlightColor: 'transparent' }}
                   className="focus:outline-none focus-visible:outline-none"
                 >
                   <path
                     d={path}
                     fill={fillStyle}
-                    stroke={inPath ? 'hsl(var(--primary)/0.9)' : 'hsl(var(--border))'}
+                    stroke={strokeCol}
                     strokeWidth={1}
                     style={{
                       filter: inPath
@@ -358,13 +368,13 @@ export default function GraphHero() {
                   </path>
                   <text
                     x={x}
-                    y={y + 1}
+                    y={y + 4}
                     textAnchor="middle"
-                    dominantBaseline="middle"
-                    fill={textColor}
-                    fontSize={15}
+                    fontSize={14}
+                    fontFamily="var(--font-sans, system-ui, sans-serif)"
                     fontWeight={500}
-                    style={{ letterSpacing: 0.5, userSelect: 'none', pointerEvents: 'none' }}
+                    fill={textColor}
+                    style={{ pointerEvents: 'none', userSelect: 'none' }}
                   >
                     {label}
                   </text>
@@ -372,9 +382,6 @@ export default function GraphHero() {
               );
             })}
           </svg>
-          <div className="mt-4 text-xs sm:text-sm text-muted-foreground font-mono">
-            enqueue(node) → traverse(graph) → visited.add(node) ✓
-          </div>
         </div>
       </div>
     </section>

@@ -27,6 +27,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html suppressHydrationWarning lang="en" className={`${heading.variable} ${sans.variable}`}>
       <body>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
+          <div className="fixed top-4 right-4 z-50">
+            <a
+              href="/resume.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              download="Pallav Bhardwaj - Resume.pdf"
+              className="inline-flex items-center gap-2 rounded-full border border-border bg-card/80 backdrop-blur px-4 py-2 text-sm font-medium shadow hover:bg-accent transition card-hover no-tap-highlight"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3v14" /><path d="m6 11 6 6 6-6" /><path d="M5 21h14" /></svg>
+              View Resume
+            </a>
+          </div>
           {children}
         </ThemeProvider>
       </body>

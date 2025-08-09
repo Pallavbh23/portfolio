@@ -38,10 +38,25 @@ export default function DSAPlayground() {
     const height = canvas.height;
     ctx.clearRect(0, 0, width, height);
 
-    ctx.strokeStyle = "#ccc";
+    // background subtle grid
+    ctx.save();
+    ctx.strokeStyle = 'rgba(148, 163, 184, 0.12)';
     ctx.lineWidth = 1;
+    const grid = 40;
+    for (let x = 0; x < width; x += grid) {
+      ctx.beginPath(); ctx.moveTo(x+0.5,0); ctx.lineTo(x+0.5,height); ctx.stroke();
+    }
+    for (let y = 0; y < height; y += grid) {
+      ctx.beginPath(); ctx.moveTo(0,y+0.5); ctx.lineTo(width,y+0.5); ctx.stroke();
+    }
+    ctx.restore();
+
+    // edges
+    ctx.strokeStyle = "#94a3b8";
+    ctx.lineWidth = 1.25;
     nodes.forEach((n) => {
       n.edges.forEach((eid) => {
+        if (eid < n.id) return; // draw once
         const target = nodes[eid];
         ctx.beginPath();
         ctx.moveTo(n.x, n.y);
@@ -50,18 +65,29 @@ export default function DSAPlayground() {
       });
     });
 
+    // nodes as diamonds
     nodes.forEach((n) => {
+      const r = 24;
       ctx.beginPath();
-      ctx.arc(n.x, n.y, 20, 0, Math.PI * 2);
-      ctx.fillStyle = visited.has(n.id) ? "#14B8A6" : "#ffffff";
+      ctx.moveTo(n.x, n.y - r);
+      ctx.lineTo(n.x + r, n.y);
+      ctx.lineTo(n.x, n.y + r);
+      ctx.lineTo(n.x - r, n.y);
+      ctx.closePath();
+      ctx.fillStyle = visited.has(n.id) ? '#4f46e5' : '#ffffff';
+      ctx.shadowColor = visited.has(n.id) ? 'rgba(79,70,229,0.45)' : 'rgba(15,23,42,0.12)';
+      ctx.shadowBlur = visited.has(n.id) ? 18 : 8;
+      ctx.shadowOffsetY = 4;
       ctx.fill();
-      ctx.strokeStyle = "#0B1220";
+      ctx.lineWidth = 1.5;
+      ctx.strokeStyle = visited.has(n.id) ? '#6366f1' : '#cbd5e1';
       ctx.stroke();
-      ctx.fillStyle = "#0B1220";
-      ctx.font = '14px system-ui, sans-serif';
+      ctx.shadowColor = 'transparent';
+      ctx.fillStyle = visited.has(n.id) ? '#eef2ff' : '#0f172a';
+      ctx.font = '600 14px system-ui, -apple-system, sans-serif';
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-      ctx.fillText(String(n.id), n.x, n.y);
+      ctx.fillText(String(n.id), n.x, n.y+1);
     });
   }, [nodes, visited]);
 
@@ -96,7 +122,7 @@ export default function DSAPlayground() {
 
   return (
     <div>
-      <div className="flex gap-4 mb-4">
+      <div className="flex gap-4 mb-4 flex-wrap">
         <label>
           Nodes:
           <input
@@ -132,7 +158,7 @@ export default function DSAPlayground() {
           />
         </label>
         <button
-          className="bg-indigo-600 text-white px-3 py-1 rounded"
+          className="bg-indigo-600 text-white px-3 py-1 rounded shadow hover:shadow-md transition"
           onClick={() => {
             setVisited(new Set());
             setNodes(generateGraph(nodeCount, density));
@@ -143,23 +169,29 @@ export default function DSAPlayground() {
       </div>
       <div className="flex gap-4 mb-4">
         <button
-          className="bg-teal-500 text-white px-3 py-1 rounded"
+          className="bg-primary text-primary-foreground px-3 py-1 rounded shadow hover:shadow-md transition"
           onClick={() => bfs(0)}
         >
           BFS from 0
         </button>
         <button
-          className="bg-teal-500 text-white px-3 py-1 rounded"
+          className="bg-primary text-primary-foreground px-3 py-1 rounded shadow hover:shadow-md transition"
           onClick={() => dfs(0)}
         >
           DFS from 0
+        </button>
+        <button
+          className="bg-slate-200 text-slate-800 px-3 py-1 rounded shadow hover:shadow-md transition dark:bg-slate-700 dark:text-slate-100"
+          onClick={() => setVisited(new Set())}
+        >
+          Reset Visited
         </button>
       </div>
       <canvas
         ref={canvasRef}
         width={800}
-        height={500}
-        className="border border-cloud rounded max-w-full h-auto"
+        height={480}
+        className="border border-border rounded-lg max-w-full h-auto bg-card"
       />
     </div>
   );
