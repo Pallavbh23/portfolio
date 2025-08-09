@@ -341,26 +341,22 @@ export default function GraphHero() {
                   style={{ cursor: node.href ? 'pointer' : 'default', outline: 'none', WebkitTapHighlightColor: 'transparent' }}
                   className="focus:outline-none focus-visible:outline-none"
                 >
-                  <motion.path
+                  <path
                     d={path}
                     fill={fillStyle}
-                    stroke={isEnd ? 'hsl(var(--primary))' : 'none'}
-                    strokeWidth={isEnd ? 1 : 0}
-                    initial={prefersReduced ? { opacity: 0 } : { scale: 0.6, opacity: 0 }}
-                    animate={prefersReduced ? { opacity: 1 } : { scale: 1, opacity: 1 }}
-                    whileHover={!prefersReduced ? { scale: 1.045 } : undefined}
-                    whileTap={!prefersReduced ? { scale: 0.95 } : undefined}
-                    transition={{ type: 'spring', stiffness: 300, damping: 24 }}
+                    stroke={inPath ? 'hsl(var(--primary)/0.9)' : 'hsl(var(--border))'}
+                    strokeWidth={1}
                     style={{
                       filter: inPath
                         ? 'drop-shadow(0 4px 14px hsl(var(--primary)/0.55))'
                         : 'drop-shadow(0 2px 6px hsl(var(--foreground)/0.05))',
-                      transformOrigin: `${x}px ${y}px`,
                       userSelect: 'none',
-                      transition: 'fill 160ms'
+                      transition: 'fill 160ms, stroke 160ms'
                     }}
-                  />
-                  <motion.text
+                  >
+                    <title>{label}</title>
+                  </path>
+                  <text
                     x={x}
                     y={y + 1}
                     textAnchor="middle"
@@ -368,15 +364,10 @@ export default function GraphHero() {
                     fill={textColor}
                     fontSize={15}
                     fontWeight={500}
-                    style={{ letterSpacing: 0.5, userSelect: 'none' }}
-                    pointerEvents="none"
-                    initial={prefersReduced ? { opacity: 0 } : { opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.05, duration: 0.3 }}
+                    style={{ letterSpacing: 0.5, userSelect: 'none', pointerEvents: 'none' }}
                   >
                     {label}
-                  </motion.text>
-                  {/* focus ring intentionally removed */}
+                  </text>
                 </g>
               );
             })}

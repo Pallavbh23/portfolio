@@ -30,9 +30,13 @@ export default function DSAPlayground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
-    const ctx = canvasRef.current?.getContext("2d");
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
     if (!ctx) return;
-    ctx.clearRect(0, 0, 800, 500);
+    const width = canvas.width;
+    const height = canvas.height;
+    ctx.clearRect(0, 0, width, height);
 
     ctx.strokeStyle = "#ccc";
     ctx.lineWidth = 1;
@@ -49,11 +53,12 @@ export default function DSAPlayground() {
     nodes.forEach((n) => {
       ctx.beginPath();
       ctx.arc(n.x, n.y, 20, 0, Math.PI * 2);
-      ctx.fillStyle = visited.has(n.id) ? "#14B8A6" : "#fff";
+      ctx.fillStyle = visited.has(n.id) ? "#14B8A6" : "#ffffff";
       ctx.fill();
       ctx.strokeStyle = "#0B1220";
       ctx.stroke();
       ctx.fillStyle = "#0B1220";
+      ctx.font = '14px system-ui, sans-serif';
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       ctx.fillText(String(n.id), n.x, n.y);
@@ -154,7 +159,7 @@ export default function DSAPlayground() {
         ref={canvasRef}
         width={800}
         height={500}
-        className="border border-cloud rounded"
+        className="border border-cloud rounded max-w-full h-auto"
       />
     </div>
   );
