@@ -17,7 +17,7 @@ export default function WorkLinkedList() {
       company: "Bharti Airtel",
       role: "Young Technical Leader (SDE-I)",
       period: "May 2022 — Feb 2023",
-      linkedIn: "https://www.linkedin.com/company/bharti-airtel/",
+      linkedIn: "https://www.linkedin.com/company/airtel/",
       bullets: [
         "Reconciled data across 3+ lines of business (~15M users/mo) with Python.",
         "Automations lifted resolution rates ~65% → ~95%; tuned Spring Boot services for ~25% faster response times impacting 350M+ users.",
@@ -27,7 +27,7 @@ export default function WorkLinkedList() {
       company: "Profitize",
       role: "Backend Engineer (remote)",
       period: "Jan 2021 — Apr 2022",
-      linkedIn: "https://www.linkedin.com/company/profitize/",
+      linkedIn: "https://www.linkedin.com/company/profitizeglobal/",
       bullets: [
         "Co-built the digital bookkeeping product with the founder; mentored a team of 5; shipped 30+ features.",
         "Dashboards/pipelines saved 20+ hrs/week; CI/CD + AWS (lambdas, microservices).",

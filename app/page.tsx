@@ -31,7 +31,7 @@ export default async function Page() {
           <div>
             <h2 className="text-3xl md:text-4xl font-semibold">Hi, I’m Pallav.</h2>
             <p className="mt-3 text-muted-foreground max-w-2xl">
-              I build payments, reliability, and data systems you can trust. Currently crafting POS payment flows and
+              I build payments, reliability, and data systems you can trust. Currently crafting payment flows and
               integrations—plus the odd dashboard and pipeline when it helps unblock teams.
             </p>
           </div>
