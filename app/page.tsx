@@ -65,7 +65,7 @@ export default async function Page() {
         <h2 className="text-2xl font-semibold">Writing</h2>
         <div className="mt-6 grid gap-6">
           <a
-            className="rounded-xl border border-cloud/70 bg-white hover:bg-indigo-100/30 transition-colors shadow-card p-5"
+            className="rounded-xl border border-cloud/70 background hover:background transition-colors shadow-card p-5"
             href="https://pallavbh23.medium.com/setting-up-docker-and-docker-compose-for-nest-js-and-mongodb-1cd972d97ef7"
             target="_blank"
             rel="noopener noreferrer"

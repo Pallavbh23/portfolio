@@ -44,7 +44,7 @@ export default function GraphHero() {
       <div>
         <h1 className="text-4xl md:text-6xl font-semibold tracking-tight">
           I build reliable payment flows and{" "}
-          <span className="bg-indigo-100 text-ink px-2 rounded">
+          <span className="background text-ink px-2 rounded">
             clean data pipes
           </span>
           .

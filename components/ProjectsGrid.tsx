@@ -18,12 +18,12 @@ export default function ProjectsGrid() {
           href={repo.html_url}
           target="_blank"
           rel="noopener noreferrer"
-          className="rounded-xl border border-cloud/70 bg-white hover:bg-indigo-100/30 transition-colors shadow-card p-5 flex flex-col"
+          className="rounded-xl border border-cloud/70 background hover:background transition-colors shadow-card p-5 flex flex-col"
         >
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-semibold">{repo.name}</h3>
             {repo.stargazers_count > 0 && (
-              <span className="text-xs bg-indigo-100 text-indigo-600 rounded-full px-2 py-0.5">
+              <span className="text-xs background text-indigo-600 rounded-full px-2 py-0.5">
                 ★ {repo.stargazers_count}
               </span>
             )}

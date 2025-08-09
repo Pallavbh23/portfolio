@@ -1,29 +1,97 @@
+/* app/globals.css */
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* 1) Fonts: we’ll attach CSS vars from next/font in layout.tsx:
+   --font-heading, --font-sans
+*/
+
 :root {
-  color-scheme: light;
-  --font-sans: ui-sans-serif, system-ui, -apple-system;
-}
-html {
-  scroll-behavior: smooth;
-}
-body {
-  @apply bg-paper text-ink antialiased;
-  font-family: var(--font-sans);
+  /* LIGHT THEME (default) */
+  /* Choose one “dark” brand color, one “light” base, + soft accents */
+  /* Primary: Indigo-ish; Background: near-white; Accents: subtle gray/indigo */
+  --background: 0 0% 99%;
+  --foreground: 222 47% 11%;
+
+  --card: 0 0% 100%;
+  --card-foreground: 222 47% 11%;
+
+  --popover: 0 0% 100%;
+  --popover-foreground: 222 47% 11%;
+
+  --primary: 244 76% 58%; /* rich indigo */
+  --primary-foreground: 210 40% 98%;
+
+  --secondary: 210 40% 96%; /* soft light blue-gray */
+  --secondary-foreground: 222 47% 11%;
+
+  --muted: 210 40% 96%;
+  --muted-foreground: 217 19% 35%;
+
+  --accent: 220 14% 96%;
+  --accent-foreground: 222 47% 11%;
+
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 210 40% 98%;
+
+  --border: 214 32% 91%;
+  --input: 214 32% 91%;
+  --ring: 244 76% 58%;
 }
 
-/* dark mode */
-@media (prefers-color-scheme: dark) {
-  :root {
-    color-scheme: dark;
+.dark {
+  /* DARK THEME (opposite contrast) */
+  --background: 222 50% 5%;
+  --foreground: 210 40% 98%;
+
+  --card: 222 50% 7%;
+  --card-foreground: 210 40% 98%;
+
+  --popover: 222 50% 7%;
+  --popover-foreground: 210 40% 98%;
+
+  --primary: 244 76% 65%;
+  --primary-foreground: 222 50% 7%;
+
+  --secondary: 222 30% 15%;
+  --secondary-foreground: 210 40% 98%;
+
+  --muted: 222 30% 15%;
+  --muted-foreground: 215 20% 75%;
+
+  --accent: 244 35% 18%;
+  --accent-foreground: 210 40% 98%;
+
+  --destructive: 0 72% 50%;
+  --destructive-foreground: 210 40% 98%;
+
+  --border: 222 30% 18%;
+  --input: 222 30% 18%;
+  --ring: 244 76% 65%;
+}
+
+/* 2) Base type scale + consistent font application */
+@layer base {
+  html {
+    font-feature-settings: "ss01" on, "liga" on, "tnum" on, "cv02" on;
   }
   body {
-    @apply bg-ink text-paper;
+    @apply bg-background text-foreground antialiased;
+    font-family: var(--font-sans), ui-sans-serif, system-ui, -apple-system,
+      Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
   }
-}
-
-.container {
-  @apply max-w-screen-xl mx-auto px-6;
+  h1, h2, h3, h4 {
+    font-family: var(--font-heading), var(--font-sans), ui-sans-serif, system-ui;
+    @apply tracking-tight;
+  }
+  h1 { @apply text-4xl md:text-5xl font-semibold; }
+  h2 { @apply text-3xl md:text-4xl font-semibold; }
+  h3 { @apply text-2xl md:text-3xl font-semibold; }
+  p  { @apply leading-relaxed; }
+  a  { @apply underline-offset-4 hover:underline; }
+  ::selection {
+    background: hsl(var(--primary) / 0.18);
+  }
 }

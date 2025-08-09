@@ -3,7 +3,7 @@ export default function LeetCode() {
   const badgeUrl = `https://leetcode-stats.vercel.app/api?username=${username}&theme=light`;
 
   return (
-    <div className="rounded-xl border border-cloud/70 shadow-card p-5 bg-white">
+    <div className="rounded-xl border border-cloud/70 shadow-card p-5 background">
       <img
         src={badgeUrl}
         alt="LeetCode stats"
