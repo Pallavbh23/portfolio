@@ -101,6 +101,38 @@ export default function GraphHero() {
     return out;
   }, []);
 
+  // Build first-parent map via BFS from Start to obtain a single canonical path to any node
+  const parentMap = useMemo(() => {
+    const start = 'Start';
+    const map = new Map<string, string | undefined>();
+    if (!adjacency[start]) return map;
+    map.set(start, undefined);
+    const q: string[] = [start];
+    while (q.length) {
+      const cur = q.shift()!;
+      for (const nxt of adjacency[cur] || []) {
+        if (!map.has(nxt)) { // first path wins
+          map.set(nxt, cur);
+          q.push(nxt);
+        }
+      }
+    }
+    return map;
+  }, [adjacency]);
+
+  // Current hovered path (from Start to hovered) as a Set for O(1) lookup
+  const pathSet = useMemo(() => {
+    if (!hoverId) return new Set<string>();
+    const s = new Set<string>();
+    let cur: string | undefined = hoverId;
+    while (cur) {
+      s.add(cur);
+      if (cur === 'Start') break;
+      cur = parentMap.get(cur);
+    }
+    return s;
+  }, [hoverId, parentMap]);
+
   // Dimensions for SVG viewBox
   const VB_WIDTH = 1000;
   const VB_HEIGHT = 360; // a bit shorter
@@ -239,7 +271,15 @@ export default function GraphHero() {
                 const { sx, sy, ex, ey } = shorten(x1,y1,x2,y2, Math.min(padA,padB));
                 const outgoingHover = hoverId === c.from;
                 const anyHover = hoverId && (c.id.includes(hoverId));
-                const stroke = outgoingHover ? 'hsl(var(--primary))' : anyHover ? 'hsl(var(--primary)/0.55)' : 'hsl(var(--muted-foreground)/0.28)';
+                const onPath = pathSet.size && pathSet.has(c.from) && pathSet.has(c.to) && parentMap.get(c.to) === c.from;
+                const stroke = onPath
+                  ? 'hsl(var(--primary))'
+                  : outgoingHover
+                    ? 'hsl(var(--primary))'
+                    : anyHover
+                      ? 'hsl(var(--primary)/0.55)'
+                      : 'hsl(var(--muted-foreground)/0.28)';
+                const strokeWidth = onPath ? 2.4 : outgoingHover ? 2.2 : 1.6;
                 return (
                   <motion.line
                     key={c.id}
@@ -248,7 +288,7 @@ export default function GraphHero() {
                     x2={ex}
                     y2={ey}
                     stroke={stroke}
-                    strokeWidth={outgoingHover ? 2.2 : 1.6}
+                    strokeWidth={strokeWidth}
                     strokeLinecap="round"
                     markerEnd="url(#gh-arrow)"
                     initial={prefersReduced ? false : { pathLength: 0 }}
@@ -261,7 +301,8 @@ export default function GraphHero() {
 
             {NODE_DATA.map(node => {
               const label = node.label || node.id;
-              const active = hoverId === node.id; // hover only controls color now
+              const inPath = pathSet.has(node.id);
+              const isEnd = hoverId === node.id;
               // dynamic geometry
               const charUnit = 8.8;
               const paddingX = 44;
@@ -280,8 +321,8 @@ export default function GraphHero() {
                 'Z',
               ].join(' ');
 
-              const fillStyle = variantFill(undefined, active);
-              const textColor = variantText(undefined, active);
+              const fillStyle = inPath ? 'hsl(var(--primary))' : 'hsl(var(--card))';
+              const textColor = inPath ? 'hsl(var(--primary-foreground))' : 'hsl(var(--foreground))';
 
               return (
                 <g
@@ -303,15 +344,16 @@ export default function GraphHero() {
                   <motion.path
                     d={path}
                     fill={fillStyle}
-                    stroke="none"
+                    stroke={isEnd ? 'hsl(var(--primary))' : 'none'}
+                    strokeWidth={isEnd ? 1 : 0}
                     initial={prefersReduced ? { opacity: 0 } : { scale: 0.6, opacity: 0 }}
                     animate={prefersReduced ? { opacity: 1 } : { scale: 1, opacity: 1 }}
                     whileHover={!prefersReduced ? { scale: 1.045 } : undefined}
                     whileTap={!prefersReduced ? { scale: 0.95 } : undefined}
                     transition={{ type: 'spring', stiffness: 300, damping: 24 }}
                     style={{
-                      filter: active
-                        ? 'drop-shadow(0 4px 14px hsl(var(--primary)/0.5))'
+                      filter: inPath
+                        ? 'drop-shadow(0 4px 14px hsl(var(--primary)/0.55))'
                         : 'drop-shadow(0 2px 6px hsl(var(--foreground)/0.05))',
                       transformOrigin: `${x}px ${y}px`,
                       userSelect: 'none',
