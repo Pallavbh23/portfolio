@@ -1,13 +1,7 @@
 import { NextResponse } from "next/server";
 import { fetchRepos } from "@/lib/github";
 
+// API route removed for static export. Keeping file empty or commented could cause module errors; this stub returns 404.
 export async function GET() {
-  const username = process.env.GITHUB_USERNAME || "Pallavbh23";
-  try {
-    const data = await fetchRepos(username);
-    // return raw array because ProjectsGrid expects data.map(...)
-    return NextResponse.json(data, { status: 200 });
-  } catch (e: any) {
-    return NextResponse.json({ error: e.message }, { status: 500 });
-  }
+  return NextResponse.json({ error: "API disabled in static export" }, { status: 404 });
 }

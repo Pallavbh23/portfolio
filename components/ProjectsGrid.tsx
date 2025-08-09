@@ -1,18 +1,19 @@
-"use client";
-import useSWR from "swr";
+import { fetchRepos } from "@/lib/github";
 
-export default function ProjectsGrid() {
-  const { data, error } = useSWR("/api/github", (url) =>
-    fetch(url).then((r) => r.json())
-  );
-
-  if (error)
+export default async function ProjectsGrid() {
+  const username = process.env.GITHUB_USERNAME || "Pallavbh23";
+  let repos: any[] = [];
+  try {
+    repos = await fetchRepos(username);
+  } catch (e) {
     return <div className="text-red-600">Failed to load projects.</div>;
-  if (!data) return <div>Loading projects…</div>;
+  }
+
+  if (!repos.length) return <div>No projects found.</div>;
 
   return (
     <div className="grid md:grid-cols-2 gap-6">
-      {data.map((repo: any) => (
+      {repos.map((repo: any) => (
         <a
           key={repo.html_url}
           href={repo.html_url}

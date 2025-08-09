@@ -18,8 +18,8 @@ export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"),
   title: "Pallav Bhardwaj — Portfolio",
   description: "Payments, reliability, data — and playful DSA.",
-  openGraph: { type: "website", title: "Pallav Bhardwaj", images: ["/api/og"] },
-  twitter: { card: "summary_large_image", images: ["/api/og"] },
+  openGraph: { type: "website", title: "Pallav Bhardwaj", images: ["/og.png"] },
+  twitter: { card: "summary_large_image", images: ["/og.png"] },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

@@ -16,3 +16,4 @@ dist
 *.zip
 *.tgz
 *.log
+out
