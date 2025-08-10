@@ -5,9 +5,9 @@ import ProjectsGrid from "@/components/ProjectsGrid";
 import WorkLinkedList from "@/components/WorkLinkedList";
 import DSAPlayground from "@/components/DSAPlayground";
 import LeetCode from "@/components/LeetCode";
-
 import Section from "@/components/Section";
-import { Card, CardBody, CardTitle, CardMeta } from "@/components/Card"; // fixed path
+import { Card, CardBody, CardTitle } from "@/components/Card"; // removed unused CardMeta
+import WhatsAppCard from "@/components/WhatsAppCard";
 
 export default async function Page() {
   const year = new Date().getFullYear();
@@ -80,6 +80,7 @@ export default async function Page() {
         <p className="text-muted-foreground">
           Auto-fetched from my GitHub. Starred repos are highlighted; AI projects float to the top.
         </p>
+        <p className="mt-2 text-sm"><a href="https://github.com/Pallavbh23" target="_blank" rel="noopener noreferrer" className="underline decoration-dotted">https://github.com/Pallavbh23</a></p>
         <div className="mt-8">
           <ProjectsGrid />
         </div>
@@ -179,10 +180,10 @@ export default async function Page() {
       <Section id="contact" padded={false}>
         <div className="py-14 md:py-20 border-t border-border">
           <h2 className="text-3xl md:text-4xl font-semibold mb-6">Contact</h2>
-          <div className="grid gap-6 sm:grid-cols-2 max-w-3xl">
+          <div className="grid gap-6 md:grid-cols-3 auto-rows-fr w-full">
             <a
               href="mailto:pallavbh23@gmail.com"
-              className="group relative rounded-xl border border-border bg-card p-6 flex flex-col gap-3 card-hover overflow-hidden"
+              className="group relative rounded-xl border border-border bg-card p-6 flex flex-col gap-3 card-hover overflow-hidden h-full"
             >
               <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity bg-gradient-to-br from-primary/5 via-primary/0 to-primary/10" />
               <div className="flex items-center gap-3">
@@ -194,19 +195,25 @@ export default async function Page() {
               </div>
               <p className="text-sm text-muted-foreground leading-relaxed">Fastest way to reach me for opportunities, collaborations or a quick technical chat.</p>
             </a>
-            <div className="group relative rounded-xl border border-border bg-card p-6 flex flex-col gap-3 card-hover overflow-hidden">
-              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity bg-gradient-to-br from-primary/5 via-primary/0 to-primary/10" />
+            <div className="h-full"><WhatsAppCard /></div>
+            <a
+              href="https://www.linkedin.com/in/pbh23"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group relative rounded-xl border border-border bg-card p-6 flex flex-col gap-3 card-hover overflow-hidden h-full"
+            >
+              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity bg-gradient-to-br from-sky-500/5 via-sky-500/0 to-sky-500/10" />
               <div className="flex items-center gap-3">
-                <div className="h-10 w-10 rounded-lg bg-emerald-500/10 text-emerald-600 flex items-center justify-center font-medium">
-                  <svg width="20" height="20" viewBox="0 0 32 32" fill="currentColor" aria-hidden="true"><path d="M16 .5C7.44.5.5 7.44.5 16S7.44 31.5 16 31.5 31.5 24.56 31.5 16 24.56.5 16 .5Zm8.87 22.87c-.38 1.07-2.25 1.98-3.1 2.02-.79.04-1.77.3-6.04-1.25-5.07-1.99-8.3-7.2-8.55-7.53-.24-.33-2.04-2.71-2.04-5.17 0-2.46 1.29-3.67 1.75-4.18.46-.5 1-.63 1.33-.63.33 0 .66 0 .95.02.3.01.71-.12 1.11.84.41.96 1.39 3.41 1.52 3.66.13.25.21.54.04.87-.17.33-.26.54-.5.83-.25.29-.53.65-.75.88-.25.25-.51.52-.22 1.02.29.5 1.29 2.13 2.77 3.46 1.9 1.7 3.49 2.23 3.99 2.48.5.25.79.21 1.08-.13.29-.33 1.25-1.46 1.58-1.96.33-.5.66-.42 1.12-.25.46.17 2.92 1.37 3.41 1.62.5.25.83.38.95.58.13.21.13 1.21-.25 2.29Z"/></svg>
+                <div className="h-10 w-10 rounded-lg bg-sky-500/10 text-sky-600 flex items-center justify-center font-medium">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5C4.98 4.88 3.88 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1 4.98 2.12 4.98 3.5zM.5 8h4V23h-4V8zM8.5 8h3.8v2.1h.05c.53-1 1.82-2.1 3.75-2.1 4.01 0 4.75 2.64 4.75 6.08V23h-4v-7.08c0-1.69-.03-3.87-2.36-3.87-2.36 0-2.72 1.84-2.72 3.74V23h-4V8z"/></svg>
                 </div>
                 <div>
-                  <div className="text-sm uppercase tracking-wide text-muted-foreground">Phone / WhatsApp</div>
-                  <div className="text-lg font-semibold">+91 9671876007</div>
+                  <div className="text-sm uppercase tracking-wide text-muted-foreground">LinkedIn</div>
+                  <div className="text-lg font-semibold">/in/pbh23</div>
                 </div>
               </div>
-              <p className="text-sm text-muted-foreground leading-relaxed">Feel free to call or drop a message on WhatsApp. I respond quickly during IST daytime.</p>
-            </div>
+              <p className="text-sm text-muted-foreground leading-relaxed">Professional updates, network and quick DMs. Always open to thoughtful connection requests.</p>
+            </a>
           </div>
         </div>
       </Section>

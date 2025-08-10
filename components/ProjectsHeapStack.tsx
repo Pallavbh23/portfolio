@@ -151,7 +151,7 @@ export default function ProjectsHeapStack({ repos }: { repos: RepoLite[] }) {
                         title={`${repo.name} • ${repo.stargazers_count}★${ai ? ' • AI' : ''}`}
                       >
                         <div className="text-xs font-mono text-muted-foreground flex items-center gap-2">
-                          <span className={`px-1.5 py-0.5 rounded ${ai ? 'bg-rose-600/10 text-rose-600' : 'bg-indigo-600/10 text-indigo-600'} font-medium`}>{repo.stargazers_count}★{ai && '•AI'}</span>
+                          <span className={`px-1.5 py-0.5 rounded ${ai ? 'bg-emerald-600/10 text-emerald-600' : 'bg-amber-500/10 text-amber-600'} font-medium`}>{repo.stargazers_count}★{ai && '•AI'}</span>
                           <span className="opacity-60">#{index}</span>
                         </div>
                         <div className="text-sm font-semibold leading-tight line-clamp-2">{repo.name}</div>
@@ -191,7 +191,7 @@ export default function ProjectsHeapStack({ repos }: { repos: RepoLite[] }) {
                   >
                     <div className="flex items-center justify-between gap-3">
                       <div className="text-sm font-semibold truncate max-w-[60%]">{repo.name}</div>
-                      <span className={`text-[10px] font-mono px-1.5 py-0.5 rounded ${ai ? 'bg-rose-600/10 text-rose-600' : 'bg-indigo-600/10 text-indigo-600'}`}>{repo.stargazers_count}★{ai && '•AI'}</span>
+                      <span className={`text-[10px] font-mono px-1.5 py-0.5 rounded ${ai ? 'bg-emerald-600/10 text-emerald-600' : 'bg-amber-500/10 text-amber-600'}`}>{repo.stargazers_count}★{ai && '•AI'}</span>
                     </div>
                     {repo.description && (
                       <p className="mt-1 text-xs text-muted-foreground line-clamp-2 leading-snug">{repo.description}</p>

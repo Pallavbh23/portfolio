@@ -16,18 +16,16 @@ interface GraphEdge { from: string; to: string; }
 
 // Normalized layout (roughly similar to previous positioning, flattened vertically)
 const NODE_DATA: GraphNode[] = [
-  { id: 'Start', nx: 0.05, ny: 0.50, variant: 'primary' },
-  { id: 'About', nx: 0.20, ny: 0.28, href: '#about', variant: 'accent' },
-  { id: 'Work', nx: 0.34, ny: 0.50, href: '#work', variant: 'neutral' },
-  { id: 'Projects', nx: 0.50, ny: 0.20, href: '#projects', variant: 'accent' },
-  { id: 'Coding Stats', nx: 0.58, ny: 0.50, href: '#coding-stats', variant: 'alt' },
-  { id: 'Writing', nx: 0.50, ny: 0.80, href: '#writing', variant: 'alt' },
-  { id: 'Playground', nx: 0.79, ny: 0.50, href: '#playground', variant: 'accent' },
-  { id: 'Contact', nx: 0.985, ny: 0.50, href: '#contact', variant: 'neutral' },
+  { id: 'About', nx: 0.08, ny: 0.50, href: '#about', variant: 'accent' },
+  { id: 'Work', nx: 0.24, ny: 0.50, href: '#work', variant: 'neutral' },
+  { id: 'Projects', nx: 0.40, ny: 0.26, href: '#projects', variant: 'accent' },
+  { id: 'Coding Stats', nx: 0.48, ny: 0.62, href: '#coding-stats', variant: 'alt' },
+  { id: 'Writing', nx: 0.58, ny: 0.38, href: '#writing', variant: 'alt' },
+  { id: 'Playground', nx: 0.74, ny: 0.50, href: '#playground', variant: 'accent' },
+  { id: 'Contact', nx: 0.90, ny: 0.50, href: '#contact', variant: 'neutral' },
 ];
 
 const EDGE_DATA: GraphEdge[] = [
-  { from: 'Start', to: 'About' },
   { from: 'About', to: 'Work' },
   { from: 'Work', to: 'Projects' },
   { from: 'Work', to: 'Coding Stats' },
@@ -99,7 +97,7 @@ export default function GraphHero() {
   const isCompact = useMedia('(max-width: 640px)');
   const ultraCompact = useMedia('(max-width: 430px)');
   const [hoverId, setHoverId] = useState<string | null>(null);
-  const [focusId, setFocusId] = useState<string>('Start');
+  const [focusId, setFocusId] = useState<string | null>(null);
   const nodeRefs = useRef<Record<string, SVGGElement | null>>({});
 
   // Build maps
@@ -113,22 +111,19 @@ export default function GraphHero() {
 
   // Build first-parent map via BFS from Start to obtain a single canonical path to any node
   const parentMap = useMemo(() => {
-    const start = 'Start';
     const map = new Map<string, string | undefined>();
-    if (!adjacency[start]) return map;
+    // choose About as root
+    const start = 'About';
     map.set(start, undefined);
     const q: string[] = [start];
     while (q.length) {
       const cur = q.shift()!;
-      for (const nxt of adjacency[cur] || []) {
-        if (!map.has(nxt)) { // first path wins
-          map.set(nxt, cur);
-          q.push(nxt);
-        }
+      for (const e of EDGE_DATA.filter(ed=>ed.from===cur)) {
+        if (!map.has(e.to)) { map.set(e.to, cur); q.push(e.to); }
       }
     }
     return map;
-  }, [adjacency]);
+  }, []);
 
   // Current hovered path (from Start to hovered) as a Set for O(1) lookup
   const pathSet = useMemo(() => {
@@ -154,12 +149,6 @@ export default function GraphHero() {
       return { id:`${e.from}-${e.to}`, from:e.from, to:e.to, a, b };
     });
   }, [nodeMap]);
-
-  // Focus first node on mount
-  useEffect(() => {
-    const g = nodeRefs.current[focusId];
-    g?.focus?.();
-  }, [focusId]);
 
   // Keyboard directional navigation
   const handleDirectionalNav = useCallback((current: string, key: string) => {
@@ -311,7 +300,7 @@ export default function GraphHero() {
 
             {NODE_DATA.map(node => {
               const label = node.label || node.id;
-              const inPath = pathSet.has(node.id);
+              const inPath = pathSet.has(node.id); // path highlight simplified
               // dynamic geometry
               const charUnit = 8.8;
               const paddingX = 44;
